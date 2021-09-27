@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "6f3883a6-d37f-4dab-bf29-7dff4778f2b1",
+		"name": "Swagger Petstore",
+		"description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.\n\nContact Support:\n Email: apiteam@swagger.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "pet",
+			"item": [
+				{
+					"name": "{pet Id}",
+					"item": [
+						{
+							"name": "Consulta de Pet nao existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Validação do status code\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"    pm.response.to.have.jsonBody();\r",
+											"    pm.response.to.not.have.jsonBody(\"error\"); \r",
+											"    pm.response.to.be.withBody;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Valores dos campos de error retornando corretamente\" ,() => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.code).to.be.eql(1);\r",
+											"    pm.expect(responseJson.message).to.be.eql(\"Pet not found\");\r",
+											"\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validação do tempo de resposta do serviço menor que 3000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+											"});\r",
+											"\r",
+											"const  schema ={\r",
+											"    \"type\": \"object\",\r",
+											"    \"properties\": {\r",
+											"        \"code\": { \"type\": \"number\" },\r",
+											"        \"type\": { \"type\": \"string\" },\r",
+											"        \"message\": { \"type\": \"string\" }\r",
+											"\r",
+											"    },\r",
+											"    \"required\": [\"code\"],\r",
+											"    \"required\": [\"type\"],\r",
+											"    \"required\": [\"message\"]\r",
+											"    \r",
+											"\r",
+											"};\r",
+											"pm.test(\"Validar type dos campos de acordo com documentação\",()=> {\r",
+											"    pm.response.to.have.jsonSchema(schema)\r",
+											"     \r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "10000",
+											"type": "string",
+											"description": "(Required) ID of pet to return"
+										}
+									]
+								},
+								"description": "Returns a single pet"
+							},
+							"response": []
+						},
+						{
+							"name": "Consulta de Pet Existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"\r",
+											"pm.test(\"Validação do status code\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.jsonBody();\r",
+											"    pm.response.to.not.have.jsonBody(\"error\"); \r",
+											"    pm.response.to.be.withBody;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Valores dos campos de pesquisa retornando corretamente\" ,() => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.id).to.be.eql(pm.variables.get(\"responseMassa\"));\r",
+											"    pm.expect(responseJson.name).to.be.eql(\"doggie\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validação do tempo de resposta do serviço menor que 3000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+											"});\r",
+											"\r",
+											"const  schema ={\r",
+											"    \"type\": \"object\",\r",
+											"    \"properties\": {\r",
+											"        \"id\": { \"type\": \"number\" },\r",
+											"        \"name\": { \"type\": \"string\" },\r",
+											"        \"status\": { \"type\": \"string\" }\r",
+											"\r",
+											"    },\r",
+											"    \"required\": [\"id\"],\r",
+											"    \"required\": [\"name\"],\r",
+											"    \"required\": [\"status\"]\r",
+											"    \r",
+											"\r",
+											"};\r",
+											"pm.test(\"Validar type dos campos de acordo com documentação\",()=> {\r",
+											"    pm.response.to.have.jsonSchema(schema)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Excluir massa de teste com sucesso\",()=> {\r",
+											"pm.sendRequest({\r",
+											"    url: \"https://petstore.swagger.io/v2/pet/\" + pm.collectionVariables.get(\"responseMassa\"),\r",
+											"    method: \"DELETE\",\r",
+											"    header: {\r",
+											"        \"content-type\": \"application/json\",\r",
+											"        \"accept\": \"application/json\"\r",
+											"    }\r",
+											"});\r",
+											"     \r",
+											"})\r",
+											"\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"//Cria a massa de testes para a consulta \r",
+											"pm.sendRequest({\r",
+											"    url: \"https://petstore.swagger.io/v2/pet\",\r",
+											"    method: \"POST\",\r",
+											"    header: {\r",
+											"        \"content-type\": \"application/json\",\r",
+											"        \"accept\": \"application/json\"\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify(\r",
+											"   {\r",
+											"        \"id\": 661,\r",
+											"        \"category\": {\r",
+											"        \"id\": 1,\r",
+											"        \"name\": \"Jake\"\r",
+											"        },\r",
+											"        \"name\": \"doggie\",\r",
+											"        \"photoUrls\": [\r",
+											"        \"sem foto\"\r",
+											"        ],\r",
+											"        \"tags\": [\r",
+											"        {\r",
+											"        \"id\": 3,\r",
+											"        \"name\": \"Medio porte\"\r",
+											"        }\r",
+											"    ],\r",
+											"        \"status\": \"available\"\r",
+											"    }\r",
+											"        )}\r",
+											"}, function (err, res) {\r",
+											"     pm.test(\"Massa criada com sucesso\",function(){\r",
+											"     let responseMassa = res.json(); \r",
+											"     console.log(responseMassa);\r",
+											"     console.log(responseMassa.id);\r",
+											"     pm.collectionVariables.set(\"responseMassa\", responseMassa.id);\r",
+											"     })\r",
+											"});\r",
+											"\r",
+											"setTimeout(function(){}, [10000])"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://petstore.swagger.io/v2/pet/{{responseMassa}}",
+									"protocol": "https",
+									"host": [
+										"petstore",
+										"swagger",
+										"io"
+									],
+									"path": [
+										"v2",
+										"pet",
+										"{{responseMassa}}"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Returns a single pet"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2"
+		},
+		{
+			"key": "responseMassa",
+			"value": ""
+		}
+	]
+}
