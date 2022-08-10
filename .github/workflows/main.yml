@@ -30,7 +30,7 @@ jobs:
     # Run the POSTMAN collection
     - name: Run POSTMAN collection
       run: |
-       newman run ./Petstore/Petstore.postman_collection.json -r htmlextra 
+       newman run ./Petstore/Petstore.postman_collection.json -e ./Petstore/Stage.postman_environment.json -r htmlextra 
 
     # Upload the contents of Test Results directory to workspace
     - name: Output the run Details
