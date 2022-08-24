@@ -1,8 +1,7 @@
 name: Test-Build
-on:
-  push:
-    branches:
-      - master
+on: [workflow_dispatch,push]
+  
+
 jobs:
   test-api:
     runs-on: ubuntu-latest
