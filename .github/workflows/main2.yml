@@ -37,6 +37,7 @@ jobs:
        path: testResults
   generate_report:
       if: always()
+      needs: [test-api] 
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
