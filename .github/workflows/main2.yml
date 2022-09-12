@@ -35,18 +35,4 @@ jobs:
       with: 
        name: RunReports
        path: testResults
-  generate_report:
-      if: always()
-      needs: [test-api] 
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Download reports
-          uses: actions/download-artifact@v1
-          with:
-            name: RunReports
-        - name: Send report to commit
-          uses: joonvena/robotframework-reporter-action@v2
-          with:
-            gh_access_token: ${{ secrets.GITHUB_TOKEN }}
- 
+
